@@ -31,12 +31,23 @@ var gameLooper = (function () {
       e.preventDefault();
     }
 
+    function toggleMute() {
+      if (audioService.menuPlay.volume == 1) {
+        audioService.menuPlay.volume = 0;
+
+      } else {
+        audioService.menuPlay.volume = 1;
+
+      }
+      console.log(audioService);
+    }
+
     // function pauses game
     function pause() {
 
       // UnPause the game
       if (isPaused === true) {
-        
+
         isPaused = false;
 
         // Start animation
@@ -49,6 +60,9 @@ var gameLooper = (function () {
         menuModule.pauseBtn.classList.add('unpaused');
         playBtn.blur();
 
+        if (firstLoad) {
+          menuModule.muteBtn.removeEventListener('click', toggleMute, false);
+        }
         // Config audio
         if (audioService.muted === false) {
           if (firstLoad === true) {
@@ -66,24 +80,24 @@ var gameLooper = (function () {
           }
         }
 
-      // Pause the game
+        // Pause the game
       } else {
-        
+
         isPaused = true;
-        
+
         // Stop animation
         cancelAnimationFrame(animationHandle);
-        
+
         // Darken background
         tint();
-        
+
         // Config classes
         menuModule.pauseBtn.classList.remove('unpaused');
         menuModule.pauseBtn.classList.add('paused');
         pauseModal.classList.add('modal-active');
         playBtnParent.classList.add('btn-active');
         audioService.mute();
-        
+
         // Config audio
         if (audioService.muted === false) {
           if (firstLoad === true) {
@@ -126,38 +140,40 @@ var gameLooper = (function () {
 
       // Game over
       if (gameOver === true) {
-        
+
         // Stop animation
         cancelAnimationFrame(animationHandle);
-        
+
         // Darken background
         tint();
-        
+
         // Config classes
         gameOverModal.classList.add('modal-active');
         playAgainBtnParent.classList.add('btn-active');
         menuModule.menuParent.classList.add('hide');
         menuModule.muteBtn.classList.remove('show');
         menuModule.pauseBtn.classList.remove('show');
-        
+
         // Config audio
         if (audioService.muted === false) {
           audioService.mute();
           audioService.gameOver.volume = 1;
           audioService.gameOver.play();
         }
-        
+
         // Disable keydown events
         document.addEventListener('keydown', handler, true);
         return;
       }
 
+
+
       // Game Win
       if (gameWin === true) {
-        
+
         // Config classes
         star.classList.add('star-active');
-        
+
         // Config audio
         if (audioService.muted === false && firstStarSound === true) {
           audioService.mute();
@@ -165,16 +181,16 @@ var gameLooper = (function () {
           audioService.star.play();
           firstStarSound = false;
         }
-        
+
         // Set watch for star retrieval
         core.getStar(protagonist);
-        
+
         // Star retrieved
         if (starCheck === true) {
-          
+
           // Darken Backgorund
           tint();
-          
+
           // Config classes
           star.classList.remove('star-active');
           star.classList.add('star-done');
@@ -183,22 +199,23 @@ var gameLooper = (function () {
           menuModule.pauseBtn.classList.remove('show');
           gameWinModal.classList.add('modal-active');
           playAgainBtnParent.classList.add('btn-active');
-          
+
           // Config audio
           if (audioService.muted === false) {
             audioService.star.pause();
             audioService.win.volume = 1;
             audioService.win.play();
           }
-          
+
           // Disable keydown events
           document.addEventListener('keydown', handler, true);
           return;
         }
       }
 
+
       // Redraw background ever loop
-      core.ctx.drawImage(core.background, 0, 0, window.innerWidth, window.innerHeight);
+      core.ctx.drawImage(core.background, 0, 0, core.background.width, core.background.height, 0, 0, window.innerWidth, window.innerHeight);
 
       // Check if protagonist has been hit
       core.checkHit(protagonist);
@@ -213,13 +230,16 @@ var gameLooper = (function () {
     } // End gameLoop function
 
     // Event Listeners
+
     menuModule.pauseBtn.addEventListener('click', pause, false);
+    menuModule.muteBtn.addEventListener('click', toggleMute, false);
     playBtn.addEventListener('click', pause, false);
     playAgainBtn.addEventListener('click', playAgain, false);
     window.addEventListener('keydown', spacePause, false);
 
     // Initialize screen on first load
-    core.ctx.drawImage(core.background, 0, 0, window.innerWidth, window.innerHeight);
+    core.ctx.drawImage(core.background, 0, 0, core.background.width, core.background.height, 0, 0, window.innerWidth, window.innerHeight);
+
     pause();
   }
 

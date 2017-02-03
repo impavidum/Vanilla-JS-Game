@@ -9,7 +9,7 @@ var marioModule = (function () {
         velBoost = 8,
         lImage = 'images/leftMario.png',
         rImage = 'images/rightMario.png',
-        startX = (window.innerWidth / 4),
+        startX = (window.innerWidth / 2),
         startY = (window.innerHeight / 2),
         marioImg = core.makeImage('images/leftMario.png');
 
