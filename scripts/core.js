@@ -5,7 +5,7 @@ var core = (function () {
 
     var gameOver = false,
         starRetrieved = false,
-        background = makeImage('images/myWall.png'),
+        background = makeImage('images/myWall.jpg'),
         tint = makeImage('images/tint.png'),
         star = document.getElementById('star'),
         canvas = document.getElementById('my-canvas'),
